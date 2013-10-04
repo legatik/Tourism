@@ -1,0 +1,47 @@
+.one, .two, .three {
+	background: #F6F8FD;
+	overflow: hidden;
+	margin-top: 20px;
+}
+
+.left {
+	float: left;
+	width: 50%;
+}
+
+.right {
+/*	float:right;*/
+	margin-left: 50%
+}
+
+.label {
+	width: 149px;
+	display: inline-block;
+}
+
+.label.textright {
+	text-align: right;
+}
+
+.list {
+	border: 1px solid gray;
+	width: 200px;
+	height: 200px;
+	overflow-y: auto;
+
+}
+
+.select-resort-town, .select-category, .select-food, .select-hotel, .select-operator {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 20px;
+}
+
+#list-food {
+	width: 150px;
+}
+
+#input-hotel {
+	width: 100px;
+}
+

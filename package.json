@@ -1,0 +1,22 @@
+{
+    "name": "tourism",
+    "version": "1.0.0",
+    "description": "Tourism search molule",
+    "author": {},
+    "dependencies": {
+        "bones": "https://github.com/legatik/Bones/tarball/master",
+        "express": "2.5.11",
+    	"connect-redis": "1.4.1",
+        "bones-passport": "https://github.com/legatik/Bones-passport/tarball/master",
+        "f_underscore": "0.1.0",
+        "socket.io" : "0.9.16",
+        "redis" : "0.8.4",
+        "crypto": "0.0.3",
+        "request": "2.16.6",
+        "underscore": "1.4.4",
+        "moment": "2.2.1"
+
+    },
+    "devDependencies": {}
+}
+

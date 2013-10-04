@@ -1,0 +1,49 @@
+<div class="container">
+	<form id="registration-form" class="form-horizontal col-lg-6 col-lg-offset-3 auth-form" action="/register" method="POST" enctype="multipart/form-data" data-validate="parsley" data-trigger="change">
+		<div class="form-group form-group-email">
+			<label class="col-lg-2 control-label auth-label" for="inputEmail">
+				Email
+			</label>
+			<div class="col-lg-9">
+				<input type="text" name="email" id="inputEmail" class="form-control"  placeholder="Email" data-trigger="focusin focusout" data-required="true"/>
+			</div>
+			<div class="alert-email alert alert-danger hide">This user exists</div>
+		</div>
+		<div class="form-group form-group-password">
+			<label class="col-lg-2 control-label auth-label" for="inputPassword">
+				Password
+			</label>
+			<div class="col-lg-9">
+				<input type="password" name="password"  id="inputPassword" class="form-control"  placeholder="Password" data-trigger="focusin focusout" data-required="true" />
+			</div>
+		</div>
+		<div class="form-group form-group-password-repeat">
+			<label class="col-lg-2 control-label auth-label" for="repeatPassword">
+				Repeat password
+			</label>
+			<div class="col-lg-9">
+				<input type="password"  id="repeatPassword" class="form-control"  placeholder="Repeat password" data-trigger="focusin focusout" data-required="true" data-equalto="#inputPassword"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 control-label auth-label" for="inputFirstName">
+				First Name
+			</label>
+			<div class="col-lg-9">
+				<input type="text" name="firstName"  id="inputFirstName" class="form-control"  placeholder="First Name" data-trigger="focusin focusout" data-required="true" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 control-label auth-label" for="inputLastName">
+				Last Name
+			</label>
+			<div class="col-lg-9">
+				<input type="text" name="lastName"  id="inputLastName" class="form-control"  placeholder="Last Name" data-trigger="focusin focusout" data-required="true" />
+			</div>
+		</div>
+		<div class="col-lg-offset-2 col-lg-9">
+			<button id="registration-submit" class="btn btn-primary" type="submit">Register</button>
+		</div>
+	</form>
+</div>
+
