@@ -10,6 +10,30 @@ view = views.Main.extend({
 		this.options = options;
 		this.search = new models.Search
 
+
+//		var city = new models.Arrcity(JSON)
+//		id: Bones.utils.guid(),
+
+//		city.set({
+//			id: Bones.utils.guid(),
+//			title: "Агиос Николаос",
+//			operators: ["Пегас"],
+//			hotels: ["IBEROSTAR MIRABELLO BEACH & VILLAGE 5*"],
+//			hotels: ["CANDIA PARK VILLAGE 4*", "IBEROSTAR HERMES 4*", "IBEROSTAR MIRABELLO BEACH and VILLAGE 5*", "MINOS BEACH ART HOTEL 5*", "MIRAMARE ARIADNI VILLAGE 4*", "MIRAMARE HOTEL 4*", "MIRAMARE LUXURY SUITE and VILLAS 5*", "OLYMPUS APART HOTEL 4*", "SANTA MARINA HOTEL 3*", "SENSIMAR MINOS PALACE 5*"],
+//			id_pegas: 486
+//		})
+//		city.save()
+
+//		var hotel = new models.Hotel
+//		hotel.set({
+//			id: Bones.utils.guid(),
+//			title: "IBEROSTAR MIRABELLO BEACH and VILLAGE 5*",
+//			id_pegas: 1645
+//		})
+//		hotel.save()
+
+
+
 	},
 
 	events: {
@@ -18,10 +42,10 @@ view = views.Main.extend({
 
 	attach: function () {
 		//header
-//		this.header = new views.Header({
-//			el: $('#header', this.el)
-//		});
-//		this.header.render().attach();
+		//		this.header = new views.Header({
+		//			el: $('#header', this.el)
+		//		});
+		//		this.header.render().attach();
 
 		//content
 		this.content = new views.Content({

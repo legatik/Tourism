@@ -2,8 +2,8 @@
 	<div class="left">
 		<div class="label">Откуда</div>
 		<select id="select-start">
-		  <option>Москва</option>
-		  <option>Питер</option>
+		  <option>Ростов-на-Дону</option>
+		  <option>Краснодар</option>
 		</select>
 		<input type="checkbox"  value="" id="check-start" />
 		<div class="label">+ близжайшие города</div>
@@ -11,8 +11,8 @@
 		<br>
 		<div class="label">Куда</div>
 		<select class="select-finish">
+			<option>Греция</option>
 			<option>Турция</option>
-			<option>Хуюрция</option>
 		</select>
 		<input type="checkbox"  value="" id="check-finish" />
 		<div class="label">Все безвизовые</div>
@@ -71,17 +71,8 @@
 		<input type="checkbox"  value="" id="check-all-resort-town" />
 		<span>Все</span>
 		<div id="list-resort-tow" class="list">
-			<input type="checkbox"  value=""  /><span>Аланья</span><br>
-			<input type="checkbox"  value=""  /><span>Анталья</span><br>
-			<input type="checkbox"  value=""  /><span>Бодрум</span><br>
-			<input type="checkbox"  value=""  /><span>Измир</span><br>
-			<input type="checkbox"  value=""  /><span>Измир</span><br>
-			<input type="checkbox"  value=""  /><span>Измир</span><br>
-			<input type="checkbox"  value=""  /><span>Измир</span><br>
-			<input type="checkbox"  value=""  /><span>Измир</span><br>
-			<input type="checkbox"  value=""  /><span>Измир</span><br>
-			<input type="checkbox"  value=""  /><span>Измир</span><br>
-			<input type="checkbox"  value=""  /><span>Измир</span><br>
+<!--			<input type="checkbox"  value=""  /><span>Аланья</span><br>-->
+
 		</div>
 	</div>
 
@@ -90,17 +81,11 @@
 		<input type="checkbox"  value="" id="check-all-category" />
 		<span>Все</span>
 		<div id="list-category" class="list">
-			<input type="checkbox"  value=""  /><span>5*</span><br>
-			<input type="checkbox"  value=""  /><span>4*</span><br>
-			<input type="checkbox"  value=""  /><span>3*</span><br>
-			<input type="checkbox"  value=""  /><span>2*</span><br>
-			<input type="checkbox"  value=""  /><span>0</span><br>
-			<input type="checkbox"  value=""  /><span>0</span><br>
-			<input type="checkbox"  value=""  /><span>0</span><br>
-			<input type="checkbox"  value=""  /><span>0</span><br>
-			<input type="checkbox"  value=""  /><span>0</span><br>
-			<input type="checkbox"  value=""  /><span>0</span><br>
-			<input type="checkbox"  value=""  /><span>0</span><br>
+			<div><input type="checkbox"  value=""  /><span>5*</span><br></div>
+			<div><input type="checkbox"  value=""  /><span>4*</span><br></div>
+			<div><input type="checkbox"  value=""  /><span>3*</span><br></div>
+			<div><input type="checkbox"  value=""  /><span>2*</span><br></div>
+			<div><input type="checkbox"  value=""  /><span>0</span><br></div>
 		</div>
 	</div>
 
@@ -124,12 +109,12 @@
 		<input type="checkbox"  value="" id="check-all-hotel" />
 		<span>Все</span>
 		<div id="list-hotel" class="list">
-			<input type="checkbox"  value=""  /><span>AJ</span><br>
-			<input type="checkbox"  value=""  /><span>BB</span><br>
-			<input type="checkbox"  value=""  /><span>FB</span><br>
-			<input type="checkbox"  value=""  /><span>MB</span><br>
-			<input type="checkbox"  value=""  /><span>RO</span><br>
-			<input type="checkbox"  value=""  /><span>UAI</span><br>
+<!--			<input type="checkbox"  value=""  /><span>AJ</span><br>-->
+<!--			<input type="checkbox"  value=""  /><span>BB</span><br>-->
+<!--			<input type="checkbox"  value=""  /><span>FB</span><br>-->
+<!--			<input type="checkbox"  value=""  /><span>MB</span><br>-->
+<!--			<input type="checkbox"  value=""  /><span>RO</span><br>-->
+<!--			<input type="checkbox"  value=""  /><span>UAI</span><br>-->
 		</div>
 	</div>
 
@@ -140,12 +125,6 @@
 		<div id="list-operator" class="list">
 			<input type="checkbox"  value=""  /><span>Анекс Тур</span><br>
 			<input type="checkbox"  value=""  /><span>Пегас</span><br>
-			<input type="checkbox"  value=""  /><span>Травел</span><br>
-			<input type="checkbox"  value=""  /><span>Тез тур</span><br>
-			<input type="checkbox"  value=""  /><span>хуйня1</span><br>
-			<input type="checkbox"  value=""  /><span>хуйня2</span><br>
-			<input type="checkbox"  value=""  /><span>хуйня3</span><br>
-			<input type="checkbox"  value=""  /><span>хуйня4</span><br>
 		</div>
 	</div>
 </div>
