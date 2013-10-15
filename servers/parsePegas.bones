@@ -8,7 +8,7 @@ var server = Bones.Server.extend({
   options: {},
   initialize: function (app) {
     var self = this;
-    _.bindAll(this, 'funcGetCountries','findCityFunction');
+    _.bindAll(this, 'funcGetCountries','findCityFunction','functionInteration');
   //  Bones.socket.emit('test')
 
 
@@ -43,12 +43,36 @@ var server = Bones.Server.extend({
     request(findCountryOptions, function(err, res, body) {
       var countArr, countArrTxt;
       countArrTxt = body.substring(body.indexOf('STATEINC).addOptions(') + 22, body.indexOf(");samo.jQuery(samo.controls.TOURINC"));
-      countArr = eval("(" + countArrTxt + ")");
-      return self.findCityFunction(sityDep, countArr[5].inc, globalRes);
+      self.countArr = eval("(" + countArrTxt + ")");
+      self.globalIteration = 0
+      self.depcity = {
+        title:"Ростов-на-Дону",
+        arr_cities:[],
+        id_pegas:sityDep,
+        id:Bones.utils.guid()
+      }
+      self.functionInteration(self.globalIteration,globalRes,sityDep)
 
     });
   },
 
+  functionInteration:function(index,globalRes,sityDep){
+    self = this
+    if(self.countArr[index]){
+      setTimeout( function() {
+        self.depcityOne = {
+          country:self.countArr[index].title,
+          cities:[]
+        }
+        self.findCityFunction(sityDep, self.countArr[index].inc, globalRes);
+      } , 500)
+    }else{
+      var depcitySaveModel = new models.Depcity(self.depcity)
+      depcitySaveModel.save()
+      globalRes.send(200)
+    }
+
+  },
 
   findCityFunction:function(sityDep,cityArive,globalRes) {
     var self = this
@@ -90,69 +114,73 @@ var server = Bones.Server.extend({
         return cityArr.push(cityOne);
       });
       hotelsArrTxt = body.substring(body.indexOf('HOTELS).add_hotels(') + 19, body.indexOf(");samo.jQuery(samo.controls.hotelsearch"));
+      
       hotelsArr = eval("(" + hotelsArrTxt + ")");
+      
+
+
+//___________________________________________________________
+//      Для сохранений данных в коллекции Arrcity 
       dataBd = [];
       cityArr.forEach(function(citys) {
-        return citys.postcityArr.forEach(function(infData) {
-          var cityId, cityName, forBd, hotelsForBD;
-          cityId = infData[1];
-          cityName = infData[0];
-          forBd = {};
-          forBd.cityName = cityName;
-          forBd.cityId = cityId;
-          hotelsForBD = hotelsArr.filter(function(hotel) {
-            if (hotel.townKey * 1 === cityId * 1) {
-              return hotel;
+        var forBd = {};
+        var hotelTempArr = [];
+        forBd.hotels = [];
+        forBd.id_pegas = ["NaN"];
+        forBd.title = citys.globalName
+        citys.postcityArr.forEach(function(region){
+          regionId = region[1]*1
+          forBd.id_pegas.push(regionId)
+          hotelTempArr = hotelsArr.filter(function(hotel){
+            if(regionId == hotel.townKey*1){
+              return(hotel)
             }
-          });
-          forBd.hotels = hotelsForBD;
-          return dataBd.push(forBd);
-        });
-      });
-      var arrSendBd = []
-      dataBd.forEach(function(data) {
-        var arrSendPath = {}
-        arrSendPath.title = data.cityName
-        arrSendPath.hotels = data.hotels.map(function(hotel) {
-          return(hotel.name+" "+hotel.star)
+          })
+          tempArrNameHotel = hotelTempArr.map(function(hotel){
+            return((hotel.name+" "+hotel.star).replace("&","and"))
+          })
+          tempArrNameHotel.forEach(function(name){
+            forBd.hotels.push(name)
+          })
         })
-        arrSendPath.id_pegas = data.cityId*1
-        arrSendPath.operators = ["PEGAS"]
-        arrSendBd.push(arrSendPath)
-      })
+        forBd.id = Bones.utils.guid()
+        forBd.operators = ["Пегас"]
+        var citySaveModel = new models.Arrcity(forBd)
+        citySaveModel.save()
+        dataBd.push(forBd)
+        
+      });
+//      console.log("dataBd length",dataBd.length)
+//      globalRes.send(200)
 //____________________________________________________________________________
 
 //      Для сохранений данных в коллекции Hotel
 
-//      var JsonArrSendBdHotels = JSON.parse(JSON.stringify(hotelsArr))
-//      console.log("hotelsArr",JsonArrSendBdHotels.length)
-//      JsonArrSendBdHotels.forEach(function(data) {
-//        var jsonSaveData = {}
-//        jsonSaveData.title = data.name +" "+data.star
-//        jsonSaveData.id_pegas = data.townKey*1
-//        jsonSaveData.category = data.starAlt
-//        jsonSaveData.id = Bones.utils.guid()
-//        var hotel = new models.Hotel(jsonSaveData)
-//        hotel.save()
-//      })
+      var JsonArrSendBdHotels = JSON.parse(JSON.stringify(hotelsArr))
+      console.log("hotelsArr",JsonArrSendBdHotels.length)
+      JsonArrSendBdHotels.forEach(function(data) {
+        var jsonSaveData = {}
+        jsonSaveData.title = (data.name +" "+data.star).replace(/[&]+/g,"and")
+        jsonSaveData.id_pegas = data.townKey*1
+        jsonSaveData.category = data.starAlt
+        jsonSaveData.id = Bones.utils.guid()
+        var hotel = new models.Hotel(jsonSaveData)
+        hotel.save()
+      })
 //      globalRes.send(200)
 
 
 //____________________________________________________________________________
 
-//      Для сохранений данных в коллекции Arrcity
-      JsonArrSendBd = JSON.parse(JSON.stringify(arrSendBd))
-      console.log("JsonArrSendBd",JsonArrSendBd.length);
 
-      JsonArrSendBd.forEach(function(jsonData) {
-        var city = new models.Arrcity(jsonData)
-        city.id = Bones.utils.guid()
-        city.save(function(err) {
-          console.log("SAVE",err);
-        })
-      })
-      globalRes.send(200)
-//____________________________________________________________________________
+//Для сохранения городов Depcity
+       cityArr.forEach(function(city){
+         self.depcityOne.cities.push(city.globalName)
+       })
+       self.depcity.arr_cities.push(self.depcityOne)
+       self.globalIteration++
+       self.functionInteration(self.globalIteration,globalRes,sityDep)
+       
     });
 
 

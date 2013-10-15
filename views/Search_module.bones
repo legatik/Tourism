@@ -37,8 +37,11 @@ view = views.Main.extend({
 					return cb()
 				}
 				self.depcity = self.depcity.first()
+				console.log('self.depcity',self.depcity, self.depcity.get('arr_cities'))
 				var cities = self.depcity.get('arr_cities')
+				console.log('cities',cities)
 				cities = _.filter(cities, function(el) {
+				  
 					return el.country==$('.select-finish', self.el).val()
 				})
 				cities = cities[0].cities;
