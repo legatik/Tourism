@@ -13,7 +13,7 @@ var server = Bones.Server.extend({
 
 
     this.get('/pegas', function (req, res) {
-      self.funcGetCountries(res)
+//      self.funcGetCountries(res)
       });
   },
 
@@ -137,7 +137,7 @@ var server = Bones.Server.extend({
             }
           })
           tempArrNameHotel = hotelTempArr.map(function(hotel){
-            return((hotel.name+" "+hotel.star).replace("&","and"))
+            return((hotel.name+" "+hotel.star).replace(/[&]+/g,"and"))
           })
           tempArrNameHotel.forEach(function(name){
             forBd.hotels.push(name)
