@@ -8,11 +8,11 @@ var server = Bones.Server.extend({
   options: {},
   initialize: function (app) {
     var self = this;
-    _.bindAll(this, 'findHotelsFunction','findCityFunction','parseTownHotels');
+    _.bindAll(this, 'findHotelsFunction','findCityFunction','parseTownHotels','collateTitle');
 
 
     this.get('/pegas', function (req, res) {
-      var sityDep = 469 //#Краснодар
+      var sityDep = 303 //Ростов-На-Дону
       var country = 1189
       this.cityJSON = {}
       this.hotelsJSON = {}
@@ -63,16 +63,42 @@ var server = Bones.Server.extend({
 
   parseTownHotels:function(globalRes){
     var self = this
-    console.log("self.cityJSON",JSON.stringify(self.cityJSON))
-    console.log("********************")
-    console.log("--------------------")
-    console.log("********************")
-    console.log("__-----------------_")
-    console.log("********************")
-    console.log("self.hotelsJSON",JSON.stringify(self.hotelsJSON))
+//    console.log("self.cityJSON",JSON.stringify(self.cityJSON))
+//    console.log("********************")
+//    console.log("--------------------")
+//    console.log("********************")
+//    console.log("__-----------------_")
+//    console.log("********************")
+//    console.log("self.hotelsJSON",JSON.stringify(self.hotelsJSON))
+//    globalRes.send(200)
+    self.townHotelsArr = []
+    self.cityJSON.forEach(function(city){
+      townHotelsPath = {}
+      townHotelsPath.title = city.Name
+      townHotelsPath.id_anex = city.RecID
+      townHotelsPath.hotels = self.hotelsJSON.filter(function(hotel){
+        if(Number(hotel.Town) == Number(townHotelsPath.id_anex)){
+          return(hotel)
+        }
+      })
+      self.townHotelsArr.push(townHotelsPath)
+    })
+    self.collateTitle(globalRes)
+  },
+
+  collateTitle:function(globalRes){
+    var self = this
+//    console.log(JSON.stringify(self.townHotelsArr))
+    var arrayCitiesPegas = new models.Arrcities
+    arrayCitiesPegas.fetch({
+      filter: {title:{$in: ["Алания","Анталья","Белек","Бурса","Кемер","Сиде"]}},
+      success: function() {
+        console.log(JSON.stringify(arrayCitiesPegas))
+      }
+    })
+    
     globalRes.send(200)
   }
-
 
 });
 
