@@ -70,7 +70,7 @@ var server = Bones.Server.extend({
 //    console.log("__-----------------_")
 //    console.log("********************")
 //    console.log("self.hotelsJSON",JSON.stringify(self.hotelsJSON))
-//    globalRes.send(200)
+//
     self.townHotelsArr = []
     self.cityJSON.forEach(function(city){
       townHotelsPath = {}
@@ -88,15 +88,54 @@ var server = Bones.Server.extend({
 
   collateTitle:function(globalRes){
     var self = this
+    self.sh = 0
 //    console.log(JSON.stringify(self.townHotelsArr))
     var arrayCitiesPegas = new models.Arrcities
     arrayCitiesPegas.fetch({
-      filter: {title:{$in: ["Алания","Анталья","Белек","Бурса","Кемер","Сиде"]}},
+      filter: {title:{$in: ["Аланья","Анталья","Белек","Бурса","Кемер","Сиде"]}},
       success: function() {
-        console.log(JSON.stringify(arrayCitiesPegas))
+//        console.log(JSON.stringify(arrayCitiesPegas))
+          var oneCityPegas = arrayCitiesPegas.filter(function(city){
+            if(city.get("title") == "Аланья"){return(city)}
+          })
+          var oneCityAnex = self.townHotelsArr.filter(function(city){
+            if(city.title == "ALANYA"){return(city)}
+          })
+          var testArr = []
+          var hotesPegas = oneCityPegas[0].get("hotels")
+          var hotelsAnex = oneCityAnex[0].hotels
+
+          hotesPegas.forEach(function(cityPegas){
+              hotelsAnex.forEach(function(cityAnex) {
+                titleAnexArr = cityAnex.Name.replace(/[&]+/g,"and").replace(/[']+/g,"`").split("(")
+                titleAnex = titleAnexArr[0].replace(/[ ]+/g,"")
+                titlePegas = cityPegas.replace(/[5*4*3* ]+/g,"")
+                if(titleAnex.length > titlePegas.length){
+                  re = new RegExp(titlePegas, 'i');
+                  found = titleAnex.match(re);
+                  if(found){
+                    self.sh++
+                  }
+                }else{
+                  re = new RegExp(titleAnex, 'i');
+                  found = titlePegas.match(re);
+                  if(found){
+                    self.sh++
+                  }
+                }
+              })
+          })
+          console.log("self.sh",self.sh);
+
+
+
+
+
+          globalRes.send(200)
+
       }
     })
-    
+
     globalRes.send(200)
   }
 
