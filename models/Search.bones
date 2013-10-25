@@ -14,7 +14,6 @@ model = Backbone.Model.extend({
     	night_min: 1,
     	night_max: 1,
     	resort_town: [],
-    	category: [],
     	food: [],
     	hotel: [],
     	operator: [],

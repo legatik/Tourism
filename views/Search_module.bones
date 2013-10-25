@@ -20,8 +20,42 @@ view = views.Main.extend({
 		this.category_checked=[]
 		this.cities_checked=[]
 		this.hotels_checked=[]
+		this.food = []
 	},
 
+
+	events: {
+		'click #search-submit': 'startSearch',
+		'change #select-start': 'changeCity',
+		'click #list-category input': 'selectCategory',
+		'change .select-finish': 'changeCity',
+		'click #list-food input': 'selectfood'
+
+	},
+
+	selectfood: function(e) {
+		console.log('selectfood');
+
+		var self=this
+			var par = $(e.target).parent()
+			var food = $('span', par).text()
+			console.log('food',$(e.target));
+
+		if (e.target.checked) {
+			self.food.push(food)
+		}
+		else {
+			_.each(self.food, function(cat, num) {
+				if (cat==food) {
+					self.food.splice(num,1)
+				}
+			})
+		}
+		console.log('this.food',this.food);
+
+
+
+	},
 
 	getInfo: function(cb) {
 		var self = this
@@ -39,11 +73,13 @@ view = views.Main.extend({
 				self.depcity = self.depcity.first()
 				console.log('self.depcity',self.depcity, self.depcity.get('arr_cities'))
 				var cities = self.depcity.get('arr_cities')
-				console.log('cities',cities)
+				console.log('cities111',cities)
 				cities = _.filter(cities, function(el) {
-
 					return el.country==$('.select-finish', self.el).val()
 				})
+
+				console.log('cities222',cities);
+				self.country = cities[0]
 				cities = cities[0].cities;
 					self.arrcities = new models.Arrcities
 					self.arrcities.fetch({
@@ -91,12 +127,7 @@ view = views.Main.extend({
 
 	},
 
-	events: {
-		'click #search-submit': 'startSearch',
-		'change #select-start': 'changeCity',
-		'click #list-category input': 'selectCategory',
-		'change .select-finish': 'changeCity'
-	},
+
 
 	changeHotels: function() {
 		var self = this;
@@ -160,12 +191,29 @@ view = views.Main.extend({
 	},
 
 	startSearch: function() {
+
+		var search = this.model.toJSON()
+
+		search.date_start=moment($('#input-date-start').val(), 'D-MM-YYYY')
+		search.date_finish=moment($('#input-date-finish').val(), 'D-MM-YYYY')
+		search.start = this.depcity.toJSON()
+		search.finish = this.country
+		search.night_min = $('#night-max').val()*1
+		search.night_max = $('#night-min').val()*1
+		search.hotel = _.map(this.hotels_checked, function(hotel) {return hotel.toJSON()})
+		search.resort_town = _.map(this.cities_checked, function(city) {return city.toJSON()})
+		search.food = this.food
+		search.number_adult = $('.select-adult').val()*1
+		search.number_child = $('.select-child').val()*1
+		search.format_price = $('.select-price').val()
+		search.min_price = $('#input-min-price').val()
+		search.max_price = $('#input-max-price').val()
+		console.log('startSearch', search);
+		return
+
 		var self=this;
 		$.ajax({
-			data: {
-				hotels: this.hotels_checked,
-				cities: this.cities_checked
-			},
+			data: search,
 			url: '/pegas',
 			type: 'GET',
 			success: function() {
@@ -181,6 +229,14 @@ view = views.Main.extend({
 
 	attach: function () {
 		//Search_module
+
+		$('#input-date-start', this.el).datepicker({
+			dateFormat: "d.mm.yy"
+		});
+		$('#input-date-finish', this.el).datepicker({
+			dateFormat: "d.mm.yy"
+		});
+
 		return this;
 	}
 });

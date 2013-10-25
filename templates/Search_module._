@@ -13,6 +13,8 @@
 		<select class="select-finish">
 			<option>Греция</option>
 			<option>Турция</option>
+			<option>Индия</option>
+			<option>Индонезия</option>
 		</select>
 		<input type="checkbox"  value="" id="check-finish" />
 		<div class="label">Все безвизовые</div>
@@ -34,15 +36,19 @@
 		<div class="label">Вылет от</div>
 		<input type="date"  id="input-date-start" />
 		<div class="label textright">Ночей от</div>
-			<select class="select-finish">
-				<option>2</option>
+			<select id="night-min" >
+				<% for (var i=1;i<=16;i++) {%>
+				<option><%=i %></option>
+				<% } %>
 			</select>
 		<br>
 		<div class="label">до</div>
 		<input type="date"  id="input-date-finish" />
 		<div class="label textright">до</div>
-		<select class="select-finish">
-			<option>16</option>
+		<select id="night-max">
+				<% for (var i=1;i<=16;i++) {%>
+				<option><%=i %></option>
+				<% } %>
 		</select>
 	</div>
 
@@ -94,12 +100,12 @@
 		<input type="checkbox"  value="" id="check-all-food" />
 		<span>Все</span>
 		<div id="list-food" class="list">
-			<input type="checkbox"  value=""  /><span>AJ</span><br>
-			<input type="checkbox"  value=""  /><span>BB</span><br>
-			<input type="checkbox"  value=""  /><span>FB</span><br>
-			<input type="checkbox"  value=""  /><span>MB</span><br>
-			<input type="checkbox"  value=""  /><span>RO</span><br>
-			<input type="checkbox"  value=""  /><span>UAI</span><br>
+			<div><input type="checkbox"  value=""  /><span>AJ</span><br></div>
+			<div><input type="checkbox"  value=""  /><span>BB</span><br></div>
+			<div><input type="checkbox"  value=""  /><span>FB</span><br></div>
+			<div><input type="checkbox"  value=""  /><span>MB</span><br></div>
+			<div><input type="checkbox"  value=""  /><span>RO</span><br></div>
+			<div><input type="checkbox"  value=""  /><span>UAI</span><br></div>
 		</div>
 	</div>
 
@@ -139,7 +145,7 @@
 	<span >цена</span>
 		<select class="select-price">
 			<option>RUB</option>
-			<option>DOL</option>
+			<option>USD</option>
 			<option>EU</option>
 		</select>
 	<span>от</span>
