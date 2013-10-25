@@ -26,6 +26,7 @@ router = Backbone.Router.extend({
 
 	routes: {
 		'/': 'home',
+		'/admin': 'admin'
 	},
 
 
@@ -79,6 +80,13 @@ router = Backbone.Router.extend({
 		}, this));
 	},
 
+	admin: function() {
+		$.when(this.state.isLoaded()).then(_.bind(function (state) {
+			this.send(views.Admin, {
+				state: state
+			});
+		}, this));
+	},
 
 	// Helper to assemble the page title.
 	pageTitle: function (view) {

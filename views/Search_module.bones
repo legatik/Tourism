@@ -41,7 +41,7 @@ view = views.Main.extend({
 				var cities = self.depcity.get('arr_cities')
 				console.log('cities',cities)
 				cities = _.filter(cities, function(el) {
-				  
+
 					return el.country==$('.select-finish', self.el).val()
 				})
 				cities = cities[0].cities;
@@ -131,6 +131,7 @@ view = views.Main.extend({
 			var hot = new views.Hotel({model: hotel, parrent: self})
 			$('#list-hotel', self.el).append(hot.render().attach().el)
 		})
+
 	},
 
 	selectCategory: function(e) {
