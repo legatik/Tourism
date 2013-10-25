@@ -8,136 +8,185 @@ var server = Bones.Server.extend({
   options: {},
   initialize: function (app) {
     var self = this;
-    _.bindAll(this, 'findHotelsFunction','findCityFunction','parseTownHotels','collateTitle');
+    _.bindAll(this, 'funcGetCountries','findCityFunction','functionInteration');
+  //  Bones.socket.emit('test')
 
 
     this.get('/pegas', function (req, res) {
-      var sityDep = 303 //Ростов-На-Дону
-      var country = 1189
-      this.cityJSON = {}
-      this.hotelsJSON = {}
-      self.findCityFunction(sityDep,country,res)
-
-    });
+        self.funcGetCountries(res)
+      });
   },
 
-  findCityFunction:function(sityDep,country,globalRes){
-    var dataGetCities, findCitysOptions,
-        self = this;
-    dataGetCities = {
-      country: country,
-      holPack: ""
-    };
-    findCitysOptions = {
-      method: "POST",
-      json: dataGetCities,
-      uri: "http://searchru1.anextour.com/SearchResult.aspx/BindHotelTownJson"
-    };
-
-    request(findCitysOptions, function(err, res, body) {
-      self.cityJSON = JSON.parse(body.d);
-      self.findHotelsFunction(sityDep,country,globalRes);
-    });
+  iconverFunction : function(body) {
+    var conv;
+    body = new Buffer(body, 'binary');
+    conv = new Iconv.Iconv('windows-1251', 'utf8');
+    body = conv.convert(body).toString();
+    return body;
   },
 
-  findHotelsFunction:function(sityDep,country,globalRes){
-    var dataGetHotels, findCitysOptions,
-        self=this;
-    dataGetHotels = {
-      country: country,
-      depCity: sityDep,
-      holPack: ''
-    };
-
-    findCitysOptions = {
-      method: "POST",
-      json: dataGetHotels,
-      uri: "http://searchru1.anextour.com/SearchResult.aspx/BindHotelListJson"
-    };
-
-    request(findCitysOptions, function(err, res, body) {
-      self.hotelsJSON = JSON.parse(body.d)
-      self.parseTownHotels(globalRes)
-    });
-  },
-
-  parseTownHotels:function(globalRes){
+  funcGetCountries:function(globalRes) {
     var self = this
-//    console.log("self.cityJSON",JSON.stringify(self.cityJSON))
-//    console.log("********************")
-//    console.log("--------------------")
-//    console.log("********************")
-//    console.log("__-----------------_")
-//    console.log("********************")
-//    console.log("self.hotelsJSON",JSON.stringify(self.hotelsJSON))
-//
-    self.townHotelsArr = []
-    self.cityJSON.forEach(function(city){
-      townHotelsPath = {}
-      townHotelsPath.title = city.Name
-      townHotelsPath.id_anex = city.RecID
-      townHotelsPath.hotels = self.hotelsJSON.filter(function(hotel){
-        if(Number(hotel.Town) == Number(townHotelsPath.id_anex)){
-          return(hotel)
-        }
-      })
-      self.townHotelsArr.push(townHotelsPath)
-    })
-    self.collateTitle(globalRes)
-  },
+    var sityDep = 144;
+    var dataGetCountries = {
+      samo_action: "TOWNFROMINC",
+      TOWNFROMINC: sityDep,
+      "_": new Date * 1
+    };
 
-  collateTitle:function(globalRes){
-    var self = this
-    self.sh = 0
-//    console.log(JSON.stringify(self.townHotelsArr))
-    var arrayCitiesPegas = new models.Arrcities
-    arrayCitiesPegas.fetch({
-      filter: {title:{$in: ["Аланья","Анталья","Белек","Бурса","Кемер","Сиде"]}},
-      success: function() {
-//        console.log(JSON.stringify(arrayCitiesPegas))
-          var oneCityPegas = arrayCitiesPegas.filter(function(city){
-            if(city.get("title") == "Аланья"){return(city)}
-          })
-          var oneCityAnex = self.townHotelsArr.filter(function(city){
-            if(city.title == "ALANYA"){return(city)}
-          })
-          var testArr = []
-          var hotesPegas = oneCityPegas[0].get("hotels")
-          var hotelsAnex = oneCityAnex[0].hotels
+    var findCountryOptions = {
+      method: "GET",
+      qs: dataGetCountries,
+      uri: "http://pegast.ru/samo5/search_tour_person?"
+    };
 
-          hotesPegas.forEach(function(cityPegas){
-              hotelsAnex.forEach(function(cityAnex) {
-                titleAnexArr = cityAnex.Name.replace(/[&]+/g,"and").replace(/[']+/g,"`").split("(")
-                titleAnex = titleAnexArr[0].replace(/[ ]+/g,"")
-                titlePegas = cityPegas.replace(/[5*4*3* ]+/g,"")
-                if(titleAnex.length > titlePegas.length){
-                  re = new RegExp(titlePegas, 'i');
-                  found = titleAnex.match(re);
-                  if(found){
-                    self.sh++
-                  }
-                }else{
-                  re = new RegExp(titleAnex, 'i');
-                  found = titlePegas.match(re);
-                  if(found){
-                    self.sh++
-                  }
-                }
-              })
-          })
-          console.log("self.sh",self.sh);
-
-
-
-
-
-          globalRes.send(200)
-
+    request(findCountryOptions, function(err, res, body) {
+      var countArr, countArrTxt;
+      countArrTxt = body.substring(body.indexOf('STATEINC).addOptions(') + 22, body.indexOf(");samo.jQuery(samo.controls.TOURINC"));
+      self.countArr = eval("(" + countArrTxt + ")");
+      self.globalIteration = 0
+      self.depcity = {
+        title:"Ростов-на-Дону",
+        arr_cities:[],
+        id_pegas:sityDep,
+        id:Bones.utils.guid()
       }
-    })
+      self.functionInteration(self.globalIteration,globalRes,sityDep)
+      console.log("self.countArr",self.countArr)
+    });
+  },
 
-    globalRes.send(200)
-  }
+  functionInteration:function(index,globalRes,sityDep){
+    self = this
+    if(self.countArr[index]){
+      setTimeout( function() {
+        self.depcityOne = {
+          country:self.countArr[index].title,
+          cities:[],
+          pegas_id:self.countArr[index].inc
+        }
+        self.findCityFunction(sityDep, self.countArr[index].inc, globalRes);
+      } , 200)
+    }else{
+      var depcitySaveModel = new models.Depcity(self.depcity)
+      depcitySaveModel.save()
+      globalRes.send(200)
+    }
+
+  },
+
+  findCityFunction:function(sityDep,cityArive,globalRes) {
+    var self = this
+    var dataGetCities = {
+      samo_action: "STATEINC",
+      TOWNFROMINC: sityDep,
+      STATEINC: cityArive,
+      "_": new Date * 1
+    };
+
+    var findCitysOptions = {
+      encoding: 'binary',
+      method: "GET",
+      qs: dataGetCities,
+      uri: "http://pegast.ru/samo5/search_tour_person?"
+    };
+
+    request(findCitysOptions, function(err, res, body) {
+      var $, cityArr, cityArrTxt, cityHtmlArr, dataBd, hotelsArr, hotelsArrTxt;
+      cityArr = [];
+      body = self.iconverFunction(body);
+      cityArrTxt = body.substring(body.indexOf('samo.controls.TOWNTO).html(') + 27, body.indexOf(");samo.jQuery(samo.controls.MEAL"));
+      $ = cheerio.load(cityArrTxt);
+      cityHtmlArr = $("div");
+      cityHtmlArr.map(function(index, element) {
+        var cityOne, labelArr;
+        cityOne = {};
+        cityOne.postcityArr = [];
+        labelArr = $(element).find("label");
+        labelArr.map(function(i, el) {
+          var arr;
+          if (i === 0) {
+            return cityOne.globalName = $(el).text();
+          } else {
+            arr = [$(el).text().replace(/[ \n\t\r\\n\\]+/g, ""), $(el).find("input").val().replace(/[ \n\t\r\\n\\/"]+/g, "")];
+            return cityOne.postcityArr.push(arr);
+          }
+        });
+        return cityArr.push(cityOne);
+      });
+      hotelsArrTxt = body.substring(body.indexOf('HOTELS).add_hotels(') + 19, body.indexOf(");samo.jQuery(samo.controls.hotelsearch"));
+      
+      hotelsArr = eval("(" + hotelsArrTxt + ")");
+      
+
+
+//___________________________________________________________
+//      Для сохранений данных в коллекции Arrcity 
+      dataBd = [];
+      cityArr.forEach(function(citys) {
+        var forBd = {};
+        var hotelTempArr = [];
+        forBd.hotels = [];
+        forBd.id_pegas = ["NaN"];
+        forBd.title = citys.globalName
+        citys.postcityArr.forEach(function(region){
+          regionId = region[1]*1
+          forBd.id_pegas.push(regionId)
+          hotelTempArr = hotelsArr.filter(function(hotel){
+            if(regionId == hotel.townKey*1){
+              return(hotel)
+            }
+          })
+          tempArrNameHotel = hotelTempArr.map(function(hotel){
+            return((hotel.name+" "+hotel.star).replace(/[&]+/g,"and")).replace(/[']+/g,"`")
+          })
+          tempArrNameHotel.forEach(function(name){
+            forBd.hotels.push(name)
+          })
+        })
+        forBd.id = Bones.utils.guid()
+        forBd.operators = ["Пегас"]
+        var citySaveModel = new models.Arrcity(forBd)
+        citySaveModel.save()
+        dataBd.push(forBd)
+        
+      });
+//      console.log("dataBd length",dataBd.length)
+//      globalRes.send(200)
+//____________________________________________________________________________
+
+//      Для сохранений данных в коллекции Hotel
+
+      var JsonArrSendBdHotels = JSON.parse(JSON.stringify(hotelsArr))
+      console.log("hotelsArr",JsonArrSendBdHotels.length)
+      JsonArrSendBdHotels.forEach(function(data) {
+        var jsonSaveData = {}
+        jsonSaveData.title = (data.name +" "+data.star).replace(/[&]+/g,"and").replace(/[']+/g,"`")
+        jsonSaveData.id_pegas = data.townKey*1
+        jsonSaveData.category = data.starAlt
+        jsonSaveData.id = Bones.utils.guid()
+        var hotel = new models.Hotel(jsonSaveData)
+        hotel.save()
+      })
+//      globalRes.send(200)
+
+
+//____________________________________________________________________________
+
+
+//Для сохранения городов Depcity
+       cityArr.forEach(function(city){
+         self.depcityOne.cities.push(city.globalName)
+       })
+       self.depcity.arr_cities.push(self.depcityOne)
+       self.globalIteration++
+       self.functionInteration(self.globalIteration,globalRes,sityDep)
+       
+    });
+
+
+
+  },
 
 });
 

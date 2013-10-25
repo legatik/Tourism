@@ -13,7 +13,7 @@ var server = Bones.Server.extend({
 
 
     this.get('/pegas', function (req, res) {
-//      self.funcGetCountries(res)
+        self.funcGetCountries(res)
       });
   },
 
@@ -62,10 +62,11 @@ var server = Bones.Server.extend({
       setTimeout( function() {
         self.depcityOne = {
           country:self.countArr[index].title,
-          cities:[]
+          cities:[],
+          pegas_id:self.countArr[index].inc
         }
         self.findCityFunction(sityDep, self.countArr[index].inc, globalRes);
-      } , 500)
+      } , 200)
     }else{
       var depcitySaveModel = new models.Depcity(self.depcity)
       depcitySaveModel.save()
