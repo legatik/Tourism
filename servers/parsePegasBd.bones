@@ -2,6 +2,7 @@ var phantom = require("node-phantom"),
 request = require('request'),
 cheerio = require('cheerio');
 Buffer = require('buffer').Buffer
+Iconv = require("iconv-lite")
 var server = Bones.Server.extend({
 
   options: {},
@@ -11,17 +12,14 @@ var server = Bones.Server.extend({
   //  Bones.socket.emit('test')
 
 
-    this.get('/pegas', function (req, res) {
+    this.get('/pegasBd', function (req, res) {
         self.funcGetCountries(res)
       });
   },
 
   iconverFunction : function(body) {
-    var conv;
-    body = new Buffer(body, 'binary');
-    conv = new Iconv.Iconv('windows-1251', 'utf8');
-    body = conv.convert(body).toString();
-    return body;
+    body = new Buffer(body, 'binary')
+    return Iconv.decode(body, 'win1251')
   },
 
   funcGetCountries:function(globalRes) {

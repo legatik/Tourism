@@ -19,9 +19,9 @@ servers.Middleware.augment({
 //        this.use(new servers.Register(app));
 //        this.use(new servers.checkUser(app));
 //        this.use(new servers.PassportLocal(app));
-//			this.use(new servers.getCollections(app));
-			this.use(new servers.parsePegas(app));
-
+//      this.use(new servers.getCollections(app));
+      this.use(new servers.parsePegas(app));
+      this.use(new servers.parsePegasBd(app));
     }
 });
 
