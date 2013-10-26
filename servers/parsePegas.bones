@@ -1,192 +1,190 @@
-var phantom = require("node-phantom"),
 request = require('request'),
 cheerio = require('cheerio');
-Iconv = require("iconv")
 Buffer = require('buffer').Buffer
+Iconv = require("iconv-lite")
 var server = Bones.Server.extend({
 
   options: {},
   initialize: function (app) {
+    this.cookieJar = request.jar(arguments.callee)
     var self = this;
-    _.bindAll(this, 'funcGetCountries','findCityFunction','functionInteration');
+    _.bindAll(this, 'createRequest','endFetching','startFetching',"collectTour");
+    this.globalRes
   //  Bones.socket.emit('test')
-
-
-    this.get('/pegas', function (req, res) {
-        self.funcGetCountries(res)
-      });
-  },
-
-  iconverFunction : function(body) {
-    var conv;
-    body = new Buffer(body, 'binary');
-    conv = new Iconv.Iconv('windows-1251', 'utf8');
-    body = conv.convert(body).toString();
-    return body;
-  },
-
-  funcGetCountries:function(globalRes) {
-    var self = this
-    var sityDep = 144;
-    var dataGetCountries = {
-      samo_action: "TOWNFROMINC",
-      TOWNFROMINC: sityDep,
-      "_": new Date * 1
-    };
-
-    var findCountryOptions = {
-      method: "GET",
-      qs: dataGetCountries,
-      uri: "http://pegast.ru/samo5/search_tour_person?"
-    };
-
-    request(findCountryOptions, function(err, res, body) {
-      var countArr, countArrTxt;
-      countArrTxt = body.substring(body.indexOf('STATEINC).addOptions(') + 22, body.indexOf(");samo.jQuery(samo.controls.TOURINC"));
-      self.countArr = eval("(" + countArrTxt + ")");
-      self.globalIteration = 0
-      self.depcity = {
-        title:"Ростов-на-Дону",
-        arr_cities:[],
-        id_pegas:sityDep,
-        id:Bones.utils.guid()
+    this.get('/pegas', function (rq, rs) {
+      self.globalRes = rs
+      var translatedSearch = {
+        samo_action:"PRICES",
+        TOWNFROMINC:144,
+        STATEINC:4,
+        TOURINC:0,
+        PROGRAMINC:0,
+        CHECKIN_BEG:20131228,
+        NIGHTS_FROM:7,
+        CHECKIN_END:20140104,
+        NIGHTS_TILL:16,
+        ADULT:2,
+        CURRENCY:1,
+        PRICE_MIN:0,
+        CHILD:0,
+        PRICE_MAX:0,
+        TOWNTO_ANY:1,
+        TOWNTO:"",
+        STARS_ANY:1,
+        STARS:"",
+        hotelsearch:0,
+        HOTELS_ANY:1,
+        HOTELS:"",
+        MEAL:"",
+        FREIGHT:1,
+        FILTER:1,
+        HOTELTYPES:"",
+        PACKET:0,
+        _:new Date()*1
       }
-      self.functionInteration(self.globalIteration,globalRes,sityDep)
-      console.log("self.countArr",self.countArr)
+      self.requestOptions = {
+        encoding: 'binary',
+        method:"GET",
+        qs:translatedSearch,
+        uri: "http://pegast.ru/samo5/search_tour_person?"
+      }
+      self.startFetching(self.requestOptions)
     });
   },
+  
+  
+  
+  
 
-  functionInteration:function(index,globalRes,sityDep){
-    self = this
-    if(self.countArr[index]){
-      setTimeout( function() {
-        self.depcityOne = {
-          country:self.countArr[index].title,
-          cities:[],
-          pegas_id:self.countArr[index].inc
-        }
-        self.findCityFunction(sityDep, self.countArr[index].inc, globalRes);
-      } , 200)
-    }else{
-      var depcitySaveModel = new models.Depcity(self.depcity)
-      depcitySaveModel.save()
-      globalRes.send(200)
-    }
-
-  },
-
-  findCityFunction:function(sityDep,cityArive,globalRes) {
-    var self = this
-    var dataGetCities = {
-      samo_action: "STATEINC",
-      TOWNFROMINC: sityDep,
-      STATEINC: cityArive,
-      "_": new Date * 1
-    };
-
-    var findCitysOptions = {
-      encoding: 'binary',
-      method: "GET",
-      qs: dataGetCities,
-      uri: "http://pegast.ru/samo5/search_tour_person?"
-    };
-
-    request(findCitysOptions, function(err, res, body) {
-      var $, cityArr, cityArrTxt, cityHtmlArr, dataBd, hotelsArr, hotelsArrTxt;
-      cityArr = [];
-      body = self.iconverFunction(body);
-      cityArrTxt = body.substring(body.indexOf('samo.controls.TOWNTO).html(') + 27, body.indexOf(");samo.jQuery(samo.controls.MEAL"));
-      $ = cheerio.load(cityArrTxt);
-      cityHtmlArr = $("div");
-      cityHtmlArr.map(function(index, element) {
-        var cityOne, labelArr;
-        cityOne = {};
-        cityOne.postcityArr = [];
-        labelArr = $(element).find("label");
-        labelArr.map(function(i, el) {
-          var arr;
-          if (i === 0) {
-            return cityOne.globalName = $(el).text();
-          } else {
-            arr = [$(el).text().replace(/[ \n\t\r\\n\\]+/g, ""), $(el).find("input").val().replace(/[ \n\t\r\\n\\/"]+/g, "")];
-            return cityOne.postcityArr.push(arr);
-          }
-        });
-        return cityArr.push(cityOne);
-      });
-      hotelsArrTxt = body.substring(body.indexOf('HOTELS).add_hotels(') + 19, body.indexOf(");samo.jQuery(samo.controls.hotelsearch"));
-      
-      hotelsArr = eval("(" + hotelsArrTxt + ")");
-      
-
-
-//___________________________________________________________
-//      Для сохранений данных в коллекции Arrcity 
-      dataBd = [];
-      cityArr.forEach(function(citys) {
-        var forBd = {};
-        var hotelTempArr = [];
-        forBd.hotels = [];
-        forBd.id_pegas = ["NaN"];
-        forBd.title = citys.globalName
-        citys.postcityArr.forEach(function(region){
-          regionId = region[1]*1
-          forBd.id_pegas.push(regionId)
-          hotelTempArr = hotelsArr.filter(function(hotel){
-            if(regionId == hotel.townKey*1){
-              return(hotel)
+  
+  
+  startFetching:function(searchOptions, offset){
+    var self = this;
+    searchOptions.qs["PRICEPAGE"] = offset;
+    this.check = 0;
+    this.offset = offset || 1
+    this.accommodations = []
+    self.createRequest(searchOptions, function(res, body) {
+      var $, conv, html, tourArr;
+        body = self.decodeText(body)
+        html = body.substring(body.indexOf('ehtml') + 6, body.indexOf("'); if (typeof"));
+        $ = cheerio.load(html);
+        tourArr = $("tbody > tr");
+        if (tourArr.length) {
+          return tourArr.map(function(index, element) {
+            var accommodation, searchDeepOptions;
+            accommodation = {
+              settlement: $(element).find("td").eq(0).text().replace(/[ \n\t\r\\n\\]+/g, ""),
+              tour: $(element).find("td").eq(1).text().replace(/[ \n\t\r]+/g, ""),
+              dayNight: $(element).find("td").eq(2).text().replace(/[ \n\t\r]+/g, ""),
+              nameHotel: $(element).find('td').eq(3).find("a").text().replace(/[ \n\t\r]+/g, ""),
+              deeplink: $(element).find('td').eq(3).find("a").attr("href"),
+              nutrition: $(element).find("td").eq(4).text().replace(/[ \n\t\r\\n\\\\n\\BB  ]+/g, ""),
+              roomsType: $(element).find("td").eq(5).text().replace(/[ \n\t\r]+/g, ""),
+              price: $(element).find("td").eq(8).text().replace(/[ \n\t\r]+/g, ""),
+              installmentPlan: $(element).find("td").eq(9).text().replace(/[ \n\t\r\\n\\]+/g, ""),
+              typePrice: $(element).find("td").eq(10).text().replace(/[ \n\t\r]+/g, ""),
+              transport: $(element).find("td").eq(11).text().replace(/[ \n\t\r\\n\\]+/g, "")
+            };
+            if (accommodation.deeplink) {
+              accommodation.deeplink = accommodation.deeplink.replace(/[\\"]+/g, "");
+              searchDeepOptions = {
+                encoding: 'binary',
+                method: "GET",
+                uri: accommodation.deeplink
+              };
+              self.createRequest(searchDeepOptions, function(res, body) {
+                var imgTagArr, tableInfo, tableInfoArr;
+                if (res.statusCode >= 400 && res.statusCode < 500) {
+                  accommodation.images = [];
+                  accommodation.discription = "";
+                  return self.collectTour(accommodation, tourArr.length);
+                } else {
+                  body = self.decodeText(body)
+                  $ = cheerio.load(body);
+                  accommodation.images = [];
+                  imgTagArr = $($(body).find(".nhotels ")).find("a");
+                  imgTagArr.map(function(index, element) {
+                    if ($(element).attr("onclick")) {
+                      return accommodation.images.push($(element).attr("onclick").replace("ViewImage(\'", "").replace("\');", ""));
+                    }
+                  });
+                  tableInfo = $(".content > table")[1];
+                  tableInfoArr = $($(tableInfo).find("table>tr")).find(".info");
+                  accommodation.discription = "tableInfoArr";
+                  return self.collectTour(accommodation, tourArr.length);
+                }
+              });
+            } else {
+              accommodation.images = [];
+              accommodation.discription = "";
+              return self.collectTour(accommodation, tourArr.length);
             }
-          })
-          tempArrNameHotel = hotelTempArr.map(function(hotel){
-            return((hotel.name+" "+hotel.star).replace(/[&]+/g,"and")).replace(/[']+/g,"`")
-          })
-          tempArrNameHotel.forEach(function(name){
-            forBd.hotels.push(name)
-          })
-        })
-        forBd.id = Bones.utils.guid()
-        forBd.operators = ["Пегас"]
-        var citySaveModel = new models.Arrcity(forBd)
-        citySaveModel.save()
-        dataBd.push(forBd)
-        
-      });
-//      console.log("dataBd length",dataBd.length)
-//      globalRes.send(200)
-//____________________________________________________________________________
-
-//      Для сохранений данных в коллекции Hotel
-
-      var JsonArrSendBdHotels = JSON.parse(JSON.stringify(hotelsArr))
-      console.log("hotelsArr",JsonArrSendBdHotels.length)
-      JsonArrSendBdHotels.forEach(function(data) {
-        var jsonSaveData = {}
-        jsonSaveData.title = (data.name +" "+data.star).replace(/[&]+/g,"and").replace(/[']+/g,"`")
-        jsonSaveData.id_pegas = data.townKey*1
-        jsonSaveData.category = data.starAlt
-        jsonSaveData.id = Bones.utils.guid()
-        var hotel = new models.Hotel(jsonSaveData)
-        hotel.save()
-      })
-//      globalRes.send(200)
-
-
-//____________________________________________________________________________
-
-
-//Для сохранения городов Depcity
-       cityArr.forEach(function(city){
-         self.depcityOne.cities.push(city.globalName)
-       })
-       self.depcity.arr_cities.push(self.depcityOne)
-       self.globalIteration++
-       self.functionInteration(self.globalIteration,globalRes,sityDep)
-       
+          });
+        } else {
+          console.log("html", html);
+          return self.endFetching();
+        }
     });
 
 
-
   },
+  
+
+  collectTour: function(tour, lengthArr) {
+    var self = this
+    this.check++;
+    this.accommodations.push(tour);
+    console.log("this.check",this.check)
+    if (this.check === lengthArr) {
+      console.log("this.accommodations",this.accommodations)
+      self.offset++;
+      return self.startFetching(self.requestOptions, self.offset);
+    }
+  },
+
+
+
+  decodeText:function(body){
+    body = new Buffer(body, 'binary')
+    return Iconv.decode(body, 'win1251')
+  },
+  
+  
+  createRequest:function(requestOptions,callback){
+    if (requestOptions.jar == null) {
+      requestOptions.jar = this.cookieJar;
+    }
+    if (requestOptions.followAllRedirects == null) {
+      requestOptions.followAllRedirects = true;
+    }
+    if (requestOptions.headers == null) {
+      requestOptions.headers = {};
+    }
+    if (requestOptions.encoding == null) {
+      requestOptions.encoding = "utf8";
+    }
+    if (requestOptions.headers["User-Agent"] == null) {
+      requestOptions.headers["User-Agent"] = "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.22 (KHTML, like Gecko) Ubuntu Chromium/25.0.1364.160 Chrome/25.0.1364.160 Safari/537.22";
+    }
+    request(requestOptions, function(error, res, body) {
+      if (error != null) {
+        return console.log(error, error.stack);
+      }
+      if (res.statusCode >= 400 && res.statusCode < 500) {
+        error = new Error("http client error from scraper with id: @id\nstatus code: " + res.statusCode + "\nheaders: " + (JSON.stringify(res.headers, null, '\t')) + "\nbody: " + body);
+        return console.error(error);
+      } else if (res.statusCode >= 500 && res.statusCode < 600) {
+        error = new Error("http server error from scraper with id: @id\nstatus code: " + res.statusCode + "\nheaders: " + (JSON.stringify(res.headers, null, '\t')) + "\nbody: " + body);
+        return console.error(error);
+      }
+      return typeof callback === "function" ? callback(res, body) : void 0;
+    })
+  },
+  
+  endFetching:function(){
+    this.globalRes.send(200)
+  }
 
 });
 

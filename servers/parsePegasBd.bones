@@ -1,7 +1,6 @@
 var phantom = require("node-phantom"),
 request = require('request'),
 cheerio = require('cheerio');
-Iconv = require("iconv")
 Buffer = require('buffer').Buffer
 var server = Bones.Server.extend({
 
