@@ -24,7 +24,8 @@ var server = Bones.Server.extend({
 
   funcGetCountries:function(globalRes) {
     var self = this
-    var sityDep = 79; //144 Ростов
+//    var sityDep = 79; //144 Ростов
+    var sityDep = 144;
     var dataGetCountries = {
       samo_action: "TOWNFROMINC",
       TOWNFROMINC: sityDep,
