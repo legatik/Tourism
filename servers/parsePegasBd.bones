@@ -24,7 +24,7 @@ var server = Bones.Server.extend({
 
   funcGetCountries:function(globalRes) {
     var self = this
-    var sityDep = 144;
+    var sityDep = 79; //144 Ростов
     var dataGetCountries = {
       samo_action: "TOWNFROMINC",
       TOWNFROMINC: sityDep,
@@ -43,7 +43,7 @@ var server = Bones.Server.extend({
       self.countArr = eval("(" + countArrTxt + ")");
       self.globalIteration = 0
       self.depcity = {
-        title:"Ростов-на-Дону",
+        title:"Краснодар",
         arr_cities:[],
         id_pegas:sityDep,
         id:Bones.utils.guid()
@@ -144,7 +144,7 @@ var server = Bones.Server.extend({
         forBd.id = Bones.utils.guid()
         forBd.operators = ["Пегас"]
         var citySaveModel = new models.Arrcity(forBd)
-        citySaveModel.save()
+//        citySaveModel.save()
         dataBd.push(forBd)
         
       });
@@ -163,7 +163,7 @@ var server = Bones.Server.extend({
         jsonSaveData.category = data.starAlt
         jsonSaveData.id = Bones.utils.guid()
         var hotel = new models.Hotel(jsonSaveData)
-        hotel.save()
+//        hotel.save()
       })
 //      globalRes.send(200)
 
