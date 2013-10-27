@@ -17,6 +17,8 @@
 .label {
 	width: 149px;
 	display: inline-block;
+	color: black;
+	font-size: 12px;
 }
 
 .label.textright {

@@ -5,7 +5,9 @@
         <title>Tourism</title>
         <script src="/assets/bones/all.js?<%= version %>" type="text/javascript" charset="utf-8"></script>
 		<link rel='stylesheet' href='/assets/tourism/stylesheets/lib/jquery-ui.css' media='screen' />
+		<link rel='stylesheet' href='/assets/tourism/stylesheets/lib/bootstrap.css' media='screen' />
         <link rel='stylesheet' href='/assets/tourism/stylesheets/style.css' media='screen' />
+
     </head>
 
     <body>
