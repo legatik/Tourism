@@ -42,10 +42,15 @@ var server = Bones.Server.extend({
         PACKET:0,
         _:new Date()*1
       }
+      
+      
+      console.log("translatedSearch",translatedSearch)
+      console.log("rq.query",rq.query)
+      dataSearch = rq.query
       self.requestOptions = {
         encoding: 'binary',
         method:"GET",
-        qs:translatedSearch,
+        qs:dataSearch,
         uri: "http://pegast.ru/samo5/search_tour_person?"
       }
       self.startFetching(self.requestOptions)

@@ -11,8 +11,8 @@
 		<br>
 		<div class="label">Куда</div>
 		<select class="select-finish">
+		  <option>Турция</option>
 			<option>Греция</option>
-			<option>Турция</option>
 			<option>Индия</option>
 			<option>Индонезия</option>
 		</select>
@@ -34,7 +34,7 @@
 <div class="two">
 	<div class="left">
 		<div class="label">Вылет от</div>
-		<input type="date"  id="input-date-start" />
+		<input  id="input-date-start" />
 		<div class="label textright">Ночей от</div>
 			<select id="night-min" >
 				<% for (var i=1;i<=16;i++) {%>
@@ -43,7 +43,7 @@
 			</select>
 		<br>
 		<div class="label">до</div>
-		<input type="date"  id="input-date-finish" />
+		<input  id="input-date-finish" />
 		<div class="label textright">до</div>
 		<select id="night-max">
 				<% for (var i=1;i<=16;i++) {%>
@@ -100,10 +100,10 @@
 		<input type="checkbox"  value="" id="check-all-food" />
 		<span>Все</span>
 		<div id="list-food" class="list">
-			<div><input type="checkbox"  value=""  /><span>AJ</span><br></div>
+			<div><input type="checkbox"  value=""  /><span>AI</span><br></div>
 			<div><input type="checkbox"  value=""  /><span>BB</span><br></div>
 			<div><input type="checkbox"  value=""  /><span>FB</span><br></div>
-			<div><input type="checkbox"  value=""  /><span>MB</span><br></div>
+			<div><input type="checkbox"  value=""  /><span>HB</span><br></div>
 			<div><input type="checkbox"  value=""  /><span>RO</span><br></div>
 			<div><input type="checkbox"  value=""  /><span>UAI</span><br></div>
 		</div>

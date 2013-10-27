@@ -6,7 +6,7 @@ view = views.Main.extend({
 	id: 'search-module',
 
 	initialize: function (options) {
-		_.bindAll(this, 'render');
+		_.bindAll(this, 'render','startFachingPegast','startSearch');
 		var self = this;
 		this.model = options.model
 		if (Bones.url && Bones.url != 'undefined') {
@@ -198,8 +198,8 @@ view = views.Main.extend({
 		search.date_finish=moment($('#input-date-finish').val(), 'D-MM-YYYY')
 		search.start = this.depcity.toJSON()
 		search.finish = this.country
-		search.night_min = $('#night-max').val()*1
-		search.night_max = $('#night-min').val()*1
+		search.night_max = $('#night-max').val()*1
+		search.night_min = $('#night-min').val()*1
 		search.hotel = _.map(this.hotels_checked, function(hotel) {return hotel.toJSON()})
 		search.resort_town = _.map(this.cities_checked, function(city) {return city.toJSON()})
 		search.food = this.food
@@ -208,19 +208,162 @@ view = views.Main.extend({
 		search.format_price = $('.select-price').val()
 		search.min_price = $('#input-min-price').val()
 		search.max_price = $('#input-max-price').val()
-		console.log('startSearch', search);
+		search.category = this.category_checked
+		this.startFachingPegast(search)
 		return
 
 		var self=this;
-		$.ajax({
-			data: search,
-			url: '/pegas',
-			type: 'GET',
-			success: function() {
-			}
-		})
 	},
 
+	startFachingPegast:function(model){
+//samo_action:PRICES
+//TOWNFROMINC:144
+//STATEINC:4
+//TOURINC:0
+//PROGRAMINC:0
+//CHECKIN_BEG:20131228
+//NIGHTS_FROM:7
+//CHECKIN_END:20140104
+//NIGHTS_TILL:16
+//ADULT:2
+//CURRENCY:2 
+//PRICE_MIN:0
+//CHILD:1
+//PRICE_MAX:1100
+//TOWNTO_ANY:0
+//TOWNTO:NaN,840,48,378,47,392,700,45,391,395,393,46,390,389,NaN,227,29,3,NaN,276,40
+//STARS_ANY:0
+//STARS:6,4,3
+//hotelsearch:0
+//HOTELS_ANY:0
+//HOTELS:5130,285,872,578,535
+//MEAL:2,4,3,5,7,6
+//FREIGHT:1
+//FILTER:1
+//HOTELTYPES:
+//PACKET:0
+//AGES:
+//HOTELS:5130,285,872,578,535
+//PRICEPAGE:1
+//rev:3868003422
+//_:1382801032525
+		var searchModel = {
+			samo_action:"PRICES",
+			TOWNFROMINC:model.start.id_pegas,
+			STATEINC: model.finish.pegas_id ,
+			TOURINC:0, //выбор тура
+			PROGRAMINC:0, //выбор программы
+			CHECKIN_BEG: moment(model.date_start).format('YYYYMMDD'),
+			NIGHTS_FROM:model.night_min,
+			CHECKIN_END:moment(model.date_finish).format('YYYYMMDD') ,
+			NIGHTS_TILL:model.night_max,
+			ADULT:model.number_adult,
+			PRICE_MIN:model.min_price,
+			CHILD:model.number_child,
+			PRICE_MAX:model.max_price,
+			hotelsearch:0, //поиск по названию
+			FREIGHT:1,//не нашел где мненять
+			FILTER:1, //не нашел где мненять
+			HOTELTYPES:"",// тип : молодежный ,рекомендуемый.Думаю это не использовать вообще.
+			PACKET:0, // не нашел где менять
+			_:new Date() *1
+		}
+		switch (model.format_price) {
+			 case "RUB":
+					searchModel["CURRENCY"]  = 1
+					break
+			 case "USD":
+					searchModel["CURRENCY"]  = 2
+					break
+			 default:
+					searchModel["CURRENCY"]  = 2
+					break
+		}
+		if(model.resort_town.length){
+			townto = []
+			model.resort_town.forEach(function(town){
+				townto.push(town.id_pegas)
+			})
+			searchModel["TOWNTO"]  = townto.toString()
+			searchModel["TOWNTO_ANY"]  = 0
+		}else{
+			searchModel["TOWNTO_ANY"]  = 1
+			searchModel["TOWNTO"]  = ''
+		}
+		
+		if(model.category.length){
+			stars = []
+			model.category.forEach(function(category){
+				category = category.replace("*","")
+				if(category == "5"){category = "6"}
+				stars.push(category)
+			})
+			searchModel["STARS"] = stars.toString()
+			searchModel["STARS_ANY"] = 0
+		}else{
+			searchModel["STARS_ANY"] = 1
+			searchModel["STARS"] = ''
+		}
+		
+		if(model.hotel.length){
+			hotels = []
+			model.hotel.forEach(function(hotel){
+				hotels.push(hotel.id_pegas)
+			})
+			searchModel["HOTELS"] = hotels.toString()
+			searchModel["HOTELS_ANY"] = 0
+		}else{
+			searchModel["HOTELS_ANY"] = 1
+			searchModel["HOTELS"] = ''
+		}
+
+		if(model.food.length){
+			var meal = []
+			model.food.forEach(function(food){
+				switch (food) {
+					 case "AI":
+							meal.push(2)
+							break
+					 case "BB":
+							meal.push(4)
+							break
+					 case "FB":
+							meal.push(3)
+							break
+					 case "HB":
+							meal.push(5)
+							break
+					 case "RO":
+							meal.push(7)
+							break
+					 case "UAI":
+							meal.push(6)
+							break
+					 default:
+							alert("питание")
+							break
+				}
+			})
+			searchModel["MEAL"] = meal.toString()
+		}else{
+			searchModel["MEAL"] = ''
+		}
+
+
+		console.log("searchModel",searchModel)
+
+		$.ajax({
+			data: searchModel,
+			url: '/pegas',
+			type: 'GET',
+			success: function(err,data) {
+				console.log("status",data)
+			}
+		})
+
+		
+		
+	},
 
 	render: function () {
 		$(this.el).html(templates[this.template]);
