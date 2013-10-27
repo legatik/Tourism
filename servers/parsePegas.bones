@@ -86,17 +86,17 @@ var server = Bones.Server.extend({
           return tourArr.map(function(index, element) {
             var accommodation, searchDeepOptions;
             accommodation = {
-              settlement: $(element).find("td").eq(0).text().replace(/[ \n\t\r\\n\\]+/g, ""),
-              tour: $(element).find("td").eq(1).text().replace(/[ \n\t\r]+/g, ""),
-              dayNight: $(element).find("td").eq(2).text().replace(/[ \n\t\r]+/g, ""),
+              settlement: $(element).find("td").eq(0).text().replace(/[\n\t\r\\n\\]+/g, ""),
+              tour: $(element).find("td").eq(1).text().replace(/[\n\t\r]+/g, ""),
+              dayNight: $(element).find("td").eq(2).text().replace(/[\n\t\r]+/g, ""),
               nameHotel: $(element).find('td').eq(3).find("a").text().replace(/[\n\t\r]+/g, ""),
               deeplink: $(element).find('td').eq(3).find("a").attr("href"),
-              nutrition: $(element).find("td").eq(4).text().replace(/[ \n\t\r\\n\\\\n\\BB  ]+/g, ""),
-              roomsType: $(element).find("td").eq(5).text().replace(/[ \n\t\r]+/g, ""),
-              price: $(element).find("td").eq(8).text().replace(/[ \n\t\r]+/g, ""),
-              installmentPlan: $(element).find("td").eq(9).text().replace(/[ \n\t\r\\n\\]+/g, ""),
-              typePrice: $(element).find("td").eq(10).text().replace(/[ \n\t\r]+/g, ""),
-              transport: $(element).find("td").eq(11).text().replace(/[ \n\t\r\\n\\]+/g, "")
+              nutrition: $(element).find("td").eq(4).text().replace(/[\n\t\r\\n\\\\n\\BB  ]+/g, ""),
+              roomsType: $(element).find("td").eq(5).text().replace(/[\n\t\r]+/g, ""),
+              price: $(element).find("td").eq(8).text().replace(/[\n\t\r]+/g, ""),
+              installmentPlan: $(element).find("td").eq(9).text().replace(/[\n\t\r\\n\\]+/g, ""),
+              typePrice: $(element).find("td").eq(10).text().replace(/[\n\t\r]+/g, ""),
+              transport: $(element).find("td").eq(11).text().replace(/[\n\t\r\\n\\]+/g, "")
             };
             if (accommodation.deeplink) {
               accommodation.deeplink = accommodation.deeplink.replace(/[\\"]+/g, "");
