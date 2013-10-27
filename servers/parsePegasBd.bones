@@ -25,6 +25,7 @@ var server = Bones.Server.extend({
   funcGetCountries:function(globalRes) {
     var self = this
     var sityDep = 79; //144 Ростов
+//    var sityDep = 144; //144 Ростов
     var dataGetCountries = {
       samo_action: "TOWNFROMINC",
       TOWNFROMINC: sityDep,
@@ -112,13 +113,13 @@ var server = Bones.Server.extend({
         return cityArr.push(cityOne);
       });
       hotelsArrTxt = body.substring(body.indexOf('HOTELS).add_hotels(') + 19, body.indexOf(");samo.jQuery(samo.controls.hotelsearch"));
-      
+
       hotelsArr = eval("(" + hotelsArrTxt + ")");
-      
+
 
 
 //___________________________________________________________
-//      Для сохранений данных в коллекции Arrcity 
+//      Для сохранений данных в коллекции Arrcity
       dataBd = [];
       cityArr.forEach(function(citys) {
         var forBd = {};
@@ -146,7 +147,7 @@ var server = Bones.Server.extend({
         var citySaveModel = new models.Arrcity(forBd)
 //        citySaveModel.save()
         dataBd.push(forBd)
-        
+
       });
 //      console.log("dataBd length",dataBd.length)
 //      globalRes.send(200)
@@ -178,7 +179,7 @@ var server = Bones.Server.extend({
        self.depcity.arr_cities.push(self.depcityOne)
        self.globalIteration++
        self.functionInteration(self.globalIteration,globalRes,sityDep)
-       
+
     });
 
 

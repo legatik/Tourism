@@ -34,8 +34,8 @@
 <div class="two">
 	<div class="left">
 		<div class="label">Вылет от</div>
-		<input  id="input-date-start" />
-		<div class="label textright">Ночей от</div>
+		<input  id="input-date-start" value="31.12.2013"/>
+		<div class="label textright" >Ночей от</div>
 			<select id="night-min" >
 				<% for (var i=1;i<=16;i++) {%>
 				<option><%=i %></option>
@@ -43,7 +43,7 @@
 			</select>
 		<br>
 		<div class="label">до</div>
-		<input  id="input-date-finish" />
+		<input  id="input-date-finish" value="4.01.2014"/>
 		<div class="label textright">до</div>
 		<select id="night-max">
 				<% for (var i=1;i<=16;i++) {%>
@@ -63,6 +63,7 @@
 		<br>
 		<div class="label textright">детей</div>
 		<select class="select-child">
+			<option>0</option>
 			<option>1</option>
 			<option>2</option>
 			<option>3</option>
@@ -153,9 +154,8 @@
 	<span>до</span>
 	<input type="number"  id="input-max-price" />
 	<button type="button" id="search-submit">Поиск</button>
-
-
-
-
+</div>
+<div id="result-field">
+	<table></table>
 </div>
 

@@ -1,0 +1,13 @@
+<td><% if (images.length!=0) {%>
+	<img src="<%= images[0] %>"  width="100"  />
+<%}%></td>
+<td><a href="deeplink"><%= nameHotel %></a></td>
+<td><%= dayNight %></td>
+<td><%= nutrition %></td>
+<td><%= price %></td>
+<td><%= roomsType %></td>
+<td><%= settlement %></td>
+<td><%= tour %></td>
+<td><%= transport %></td>
+<td><%= typePrice %></td>
+

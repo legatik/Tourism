@@ -5,6 +5,10 @@ Iconv = require("iconv-lite")
 var server = Bones.Server.extend({
 
   options: {},
+
+
+
+
   initialize: function (app) {
     this.cookieJar = request.jar(arguments.callee)
     var self = this;
@@ -12,6 +16,9 @@ var server = Bones.Server.extend({
     this.globalRes
   //  Bones.socket.emit('test')
     this.get('/pegas', function (rq, rs) {
+
+
+
       self.globalRes = rs
       var translatedSearch = {
         samo_action:"PRICES",
@@ -42,8 +49,8 @@ var server = Bones.Server.extend({
         PACKET:0,
         _:new Date()*1
       }
-      
-      
+
+
       console.log("translatedSearch",translatedSearch)
       console.log("rq.query",rq.query)
       dataSearch = rq.query
@@ -56,13 +63,13 @@ var server = Bones.Server.extend({
       self.startFetching(self.requestOptions)
     });
   },
-  
-  
-  
-  
 
-  
-  
+
+
+
+
+
+
   startFetching:function(searchOptions, offset){
     var self = this;
     searchOptions.qs["PRICEPAGE"] = offset;
@@ -134,12 +141,15 @@ var server = Bones.Server.extend({
 
 
   },
-  
+
 
   collectTour: function(tour, lengthArr) {
     var self = this
     this.check++;
     this.accommodations.push(tour);
+    //СОКЕТ ЕНКННЕКАЛ
+    Bones.Core.socket.emit('pegasAnswer', {tour:tour})
+
     console.log("this.check",this.check)
     if (this.check === lengthArr) {
       console.log("this.accommodations",this.accommodations)
@@ -154,8 +164,8 @@ var server = Bones.Server.extend({
     body = new Buffer(body, 'binary')
     return Iconv.decode(body, 'win1251')
   },
-  
-  
+
+
   createRequest:function(requestOptions,callback){
     if (requestOptions.jar == null) {
       requestOptions.jar = this.cookieJar;
@@ -186,7 +196,7 @@ var server = Bones.Server.extend({
       return typeof callback === "function" ? callback(res, body) : void 0;
     })
   },
-  
+
   endFetching:function(){
     this.globalRes.send(200)
   }
