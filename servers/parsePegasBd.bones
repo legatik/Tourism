@@ -66,7 +66,7 @@ var server = Bones.Server.extend({
       } , 200)
     }else{
       var depcitySaveModel = new models.Depcity(self.depcity)
-      depcitySaveModel.save()
+//      depcitySaveModel.save()
       globalRes.send(200)
     }
 
@@ -155,15 +155,14 @@ var server = Bones.Server.extend({
 //      Для сохранений данных в коллекции Hotel
 
       var JsonArrSendBdHotels = JSON.parse(JSON.stringify(hotelsArr))
-      console.log("hotelsArr",JsonArrSendBdHotels.length)
       JsonArrSendBdHotels.forEach(function(data) {
         var jsonSaveData = {}
         jsonSaveData.title = (data.name +" "+data.star).replace(/[&]+/g,"and").replace(/[']+/g,"`")
-        jsonSaveData.id_pegas = data.townKey*1
+        jsonSaveData.id_pegas = data.id*1
         jsonSaveData.category = data.starAlt
         jsonSaveData.id = Bones.utils.guid()
         var hotel = new models.Hotel(jsonSaveData)
-//        hotel.save()
+        hotel.save()
       })
 //      globalRes.send(200)
 
