@@ -134,7 +134,7 @@ var server = Bones.Server.extend({
             }
           });
         } else {
-          console.log("html", html);
+          Bones.Core.socket.emit('noFind')
           return self.endFetching();
         }
     });

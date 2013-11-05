@@ -9,11 +9,7 @@ view = views.Main.extend({
 		_.bindAll(this, 'render','startFachingPegast','startSearch');
 		var self = this;
 		this.model = options.model
-		if (Bones.url && Bones.url != 'undefined') {
-			this.socket = io.connect(Bones.url);
-		} else {
-			this.socket = io.connect('http://localhost:3000');
-		}
+
 		this.getInfo(function() {
 			self.attachInfo()
 		})
@@ -22,17 +18,8 @@ view = views.Main.extend({
 		this.hotels_checked=[]
 		this.food = []
 
-		this.socket.on('pegasAnswer', function(data) {
-			console.log('PEGAS', data);
-			var tour = new models.Tour(data.tour)
-			t = new views.Tour({model: tour})
-			console.log($('#result-field > table', self.el));
 
 
-			$('#result-field > table', self.el).append(t.render().attach().el)
-
-
-		})
 
 	},
 
@@ -337,7 +324,7 @@ view = views.Main.extend({
 
 
 		console.log("searchModel",searchModel)
-
+		self.result && self.result.remove()
 		$.ajax({
 			data: searchModel,
 			url: '/pegas',
@@ -346,7 +333,8 @@ view = views.Main.extend({
 				console.log("status",data)
 			}
 		})
-
+		self.result = new views.Result
+		$('#result-field', self.el).append(self.result.render().attach().el)
 
 
 	},
