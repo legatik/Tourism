@@ -37,7 +37,10 @@
 	</div>
 	<br>
 	<div class="row">
-		<button  class="btn btn-default col-lg-3 col-lg-offset-4">редактировать / просмотреть города</button>
+		<button  class="btn btn-default col-lg-3 col-lg-offset-4 show-cities">редактировать / просмотреть города</button>
+	</div>
+	<div class="help2-c">
+		<div id="cityes_cont"></div>
 	</div>
 
 </div>

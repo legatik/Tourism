@@ -11,7 +11,8 @@ view = views.Main.extend({
 
 	events: {
 		'change .select-country': 'attach',
-		'click .sel-operator': 'dddd'
+		'click .sel-operator': 'dddd',
+		'click .show-cities': 'showcities'
 	},
 
 	dddd: function(e) {
@@ -21,6 +22,17 @@ view = views.Main.extend({
 		this.operator_name =  $('.sel-operator > option:contains('+$(e.target).val()+')').attr('operator_name')
 
 		this.attach()
+	},
+
+	showcities: function() {
+		var self=this;
+		self.cities = new views.AdminCities({
+				country: self.country,
+				operator: self.operator,
+				el: $('#cityes_cont', self.el),
+				operator_name: self.operator_name
+			})
+		self.cities.render().attach()
 	},
 
 	fetchCountry: function(country, cb) {
@@ -54,7 +66,6 @@ view = views.Main.extend({
 		var self = this;
 		this.fetchCountry($('.select-country', this.el).val(), function() {
 			if (self.mode =='country') {
-				console.log('sssssssssss', self.mode);
 				self.ids && self.ids.remove() && $('.help-c', self.el).append($('<div id="country_cont"></div>'))
 
 				self.ids = new views.AdminCountry({
@@ -64,7 +75,6 @@ view = views.Main.extend({
 					operator_name: self.operator_name
 				})
 
-				console.log('ddd', self.ids);
 
 				self.ids.render().attach()
 			}
