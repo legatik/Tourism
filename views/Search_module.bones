@@ -75,43 +75,68 @@ view = views.Main.extend({
 					return cb()
 				}
 				self.depcity = self.depcity.first()
-				console.log('self.depcity',self.depcity, self.depcity.get('arr_cities'))
-				var cities = self.depcity.get('arr_cities')
-				console.log('cities111',cities)
-				cities = _.filter(cities, function(el) {
-					return el.country==$('.select-finish', self.el).val()
+//				$('.select-finish', self.el).empty()
+				var nado =  self.depcity.get('arr_countries')
+				var est = $('.select-finish > option', self.el).map(function(num, el) {
+					return $(el).text()
+				})
+				add = _.compact(nado.map(function(el) {
+					if (_.indexOf(est, el)==-1) {
+						return el
+					}
+				}))
+				remm = _.compact(est.map(function(num, el) {
+					if (_.indexOf(nado, el)==-1) {
+						return el
+					}
+				}))
+				console.log('add', add);
+				console.log('remm', remm);
+
+				add.forEach(function(el) {
+					$('.select-finish', self.el).append($('<option>'+el+'</option>'))
+				})
+				remm.forEach(function(el) {
+					$('.select-finish > option:contains('+el+')').remove()
 				})
 
-				console.log('cities222',cities);
-				self.country = cities[0]
-				cities = cities[0].cities;
-					self.arrcities = new models.Arrcities
-					self.arrcities.fetch({
-						filter: {
-							title: {
-								$in: cities
-							}
-						},
-						success: function() {
-							var mas_hotels = []
-							self.arrcities.each(function(el) {
-								_.each(el.get('hotels'), function(hotel) {
-									mas_hotels.push(hotel)
-								})
-							})
-							self.hotels = new models.Hotels
-							self.hotels.fetch({
-								filter: {
-									title: {
-										$in: mas_hotels
-									}
-								},
-								success: function() {
-									cb()
+				countries = new models.Countries
+				countries.fetch({
+					filter: {
+						title: $('.select-finish', self.el).val()
+					},
+					success: function() {
+						self.country = countries.first()
+						cities = self.country.get('cities')
+						self.arrcities = new models.Arrcities
+						self.arrcities.fetch({
+							filter: {
+								title: {
+									$in: cities
 								}
-							})
-						}
-					})
+							},
+							success: function() {
+								var mas_hotels = []
+								self.arrcities.each(function(el) {
+									_.each(el.get('hotels'), function(hotel) {
+										mas_hotels.push(hotel)
+									})
+								})
+								self.hotels = new models.Hotels
+								self.hotels.fetch({
+									filter: {
+										title: {
+											$in: mas_hotels
+										}
+									},
+									success: function() {
+										cb()
+									}
+								})
+							}
+						})
+					}
+				})
 			}
 		})
 	},
@@ -201,7 +226,7 @@ view = views.Main.extend({
 		search.date_start=moment($('#input-date-start').val(), 'D-MM-YYYY')
 		search.date_finish=moment($('#input-date-finish').val(), 'D-MM-YYYY')
 		search.start = this.depcity.toJSON()
-		search.finish = this.country
+		search.finish = this.country.toJSON()
 		search.night_max = $('#night-max').val()*1
 		search.night_min = $('#night-min').val()*1
 		search.hotel = _.map(this.hotels_checked, function(hotel) {return hotel.toJSON()})
@@ -223,7 +248,7 @@ view = views.Main.extend({
 		var searchModel = {
 			samo_action:"PRICES",
 			TOWNFROMINC:model.start.id_pegas,
-			STATEINC: model.finish.pegas_id ,
+			STATEINC: model.finish.id_pegas ,
 			TOURINC:0, //выбор тура
 			PROGRAMINC:0, //выбор программы
 			CHECKIN_BEG: moment(model.date_start).format('YYYYMMDD'),

@@ -26,7 +26,8 @@ router = Backbone.Router.extend({
 
 	routes: {
 		'/': 'home',
-		'/admin': 'admin'
+		'/admin': 'admin',
+		'/admin/country': 'admin'
 	},
 
 

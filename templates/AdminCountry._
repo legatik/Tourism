@@ -1,0 +1,16 @@
+<div class="form-group">
+	<label>ID оператора</label>
+	<input class="form-control id-oper" placeholder="ID оператора" in_model="<%= operator %>"/>
+</div>
+
+
+
+<div class="form-group">
+	<label>Название страны у оператора</label>
+	<input class="form-control id-country" placeholder="Название страны у оператора" in_model="<%= operator %>"/>
+</div>
+
+<div class="row">
+		<button  class="btn btn-primary col-lg-3 col-lg-offset-4" id="save-country">сохранить изменения в стране</button>
+</div>
+
